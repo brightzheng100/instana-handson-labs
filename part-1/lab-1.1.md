@@ -18,7 +18,6 @@ $ nc -vz auth-infra.instana.io 443
 $ sudo mkdir /mnt/{data,metrics,traces}
 
 # TLS
-$ sudo apt install libnss3-tools
 $ curl -sLO https://github.com/FiloSottile/mkcert/releases/download/v1.4.3/mkcert-v1.4.3-linux-amd64
 $ chmod +x mkcert-v1.4.3-linux-amd64 && sudo mv mkcert-v1.4.3-linux-amd64 /usr/local/bin/mkcert
 
@@ -56,9 +55,10 @@ sudo systemctl start docker
 sudo docker run hello-world
 
 # Add current user into docker group so that we can run Docker cli without the need of sudo
-# Re-login to the VM to take effect
 sudo usermod -aG docker $USER
 ```
+
+> Note: Please re-login to the VM to take effect.
 
 ## 4. Install Instana Server
 
@@ -87,7 +87,7 @@ sudo dnf install python3-dnf-plugin-versionlock -y
 sudo dnf versionlock add instana-console
 
 # Finally, let’s kick off the init process
-$ sudo instana init
+sudo instana init
 ```
 
 ## 5. First login
@@ -108,8 +108,14 @@ $ sudo instana license verify
 
 ## 7. Post Actions
 
+After installing the agent by running the generated one-liner command from Instana UI:
+
 ```sh
 $ sudo systemctl is-enabled instana-agent
+
+# Or we can enable and start it manually
+$ sudo systemctl enable instana-agent
+$ sudo systemctl start instana-agent
 
 $ sudo systemctl status instana-agent
 
@@ -134,7 +140,9 @@ com.instana.plugin.host:
     - 'poc'
     - 'instana'
 EOF
+```
 
+```sh
 # Set up the proper EUM endpoint which will proxy to the :2999 internal port
 # DO REPLACE IT WITH YOUR ENDPOINT!!!
 # Ref: https://www.ibm.com/docs/en/obi/current?topic=installer-configuring-end-user-monitoring
@@ -147,16 +155,4 @@ EOF
 
 # Then apply it
 sudo instana update -f settings.hcl
-
-
-# Update the config with below session added
-$ sudo vi settings.hcl 
----
-feature "pcfEnabled" {
-  enabled = true
-}
----
-
-# Then apply it
-$ sudo instana update -f settings.hcl
 ```
