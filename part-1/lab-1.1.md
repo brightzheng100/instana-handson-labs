@@ -122,7 +122,7 @@ $ sudo systemctl start instana-agent
 $ sudo systemctl status instana-agent
 
 # Configure zone
-touch /opt/instana/agent/etc/instana/configuration-zone.yaml
+sudo touch /opt/instana/agent/etc/instana/configuration-zone.yaml
 
 INSTANA_ZONE="InstanaServer" && \
 cat <<EOF | sudo tee /opt/instana/agent/etc/instana/configuration-zone.yaml
@@ -134,7 +134,8 @@ EOF
 
 # (optional) Configure host, like tags
 # Do change them accordingly
-touch /opt/instana/agent/etc/instana/configuration-host.yaml
+sudo touch /opt/instana/agent/etc/instana/configuration-host.yaml
+
 cat <<EOF | sudo tee /opt/instana/agent/etc/instana/configuration-host.yaml
 # Host
 com.instana.plugin.host:
@@ -148,7 +149,7 @@ EOF
 # Set up the proper EUM endpoint which will proxy to the :2999 internal port
 # DO REPLACE IT WITH YOUR ENDPOINT!!!
 # Ref: https://www.ibm.com/docs/en/obi/current?topic=installer-configuring-end-user-monitoring
-EUM_ENDPOINT="https://168.1.53.231.nip.io:446" && \
+EUM_ENDPOINT="https://168.1.53.216.nip.io:446" && \
 cat | sudo tee -a settings.hcl <<EOF
 eum {
   tracking_base_url = "${EUM_ENDPOINT}/eum/"
