@@ -17,7 +17,7 @@ $ cd robot-shop
 # Deploy it by Helm 3
 # NOTE: Use the right values generated in website config as the variables
 $ INSTANA_EUM_REPORTING_URL="https://168.1.53.231.nip.io:446/eum/" && \
-  INSTANA_EUM_KEY="KYsvilL1T1Ovsx1bn6Q26w" && \
+  INSTANA_EUM_KEY="xxxxxxxxxxxxxxxxx" && \
   helm install robot-shop K8s/helm \
     --namespace robot-shop \
     --set image.version=2.1.0 \
@@ -63,7 +63,7 @@ $ cd robot-shop
 # Deploy it by Helm 3
 # NOTE: Use the right values generated in website config as the variables
 $ INSTANA_EUM_REPORTING_URL="https://168.1.53.231.nip.io:446/eum/" && \
-  INSTANA_EUM_KEY="KYsvilL1T1Ovsx1bn6Q26w" && \
+  INSTANA_EUM_KEY="xxxxxxxxxxxxxxxxx" && \
   helm install robot-shop K8s/helm \
     --namespace robot-shop \
     --set image.version=2.1.0 \

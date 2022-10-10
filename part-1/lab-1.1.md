@@ -12,6 +12,8 @@ $ uname -a
 
 ```sh
 # Test the connectivity
+# Make sure the netcat is installed
+$ sudo dnf install nc -y
 $ nc -vz auth-infra.instana.io 443
 
 # Mount or simply create some data folders for simplicity purposes

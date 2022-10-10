@@ -34,6 +34,4 @@ spec:
             value: "1"                     # enable it now
         image: robotshop/rs-load:latest
 EOF
-
-
 ```
