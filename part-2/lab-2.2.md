@@ -32,7 +32,7 @@ $ kubectl get pod -n robot-shop
 
 ```sh
 # Expose the app if you want – this is optional for the lab
-$ NODEPORT=$( kg svc web -o=jsonpath='{.spec.ports[0].nodePort}' -n robot-shop ) && \
+$ NODEPORT=$( kubectl get svc web -o=jsonpath='{.spec.ports[0].nodePort}' -n robot-shop ) && \
   docker run -d --restart always \
     --name kind-proxy-${NODEPORT} \
     --publish 0.0.0.0:${NODEPORT}:${NODEPORT} \
