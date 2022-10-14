@@ -41,7 +41,7 @@ root@ubuntu-0:~# echo "custom.metrics.my_metric_name:10|g|#host:ubuntu-0" | nc -
 ## 3. Create a simple script
 
 ```
-root@ubuntu-0:~# cat > check-tls-cert-expiry.sh <<EOF
+root@ubuntu-0:~# cat > check-tls-cert-expiry.sh <<'EOF'
 #!/bin/bash
 
 TARGET="google.com:443";
