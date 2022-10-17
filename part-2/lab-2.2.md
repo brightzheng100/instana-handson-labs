@@ -21,6 +21,7 @@ $ INSTANA_EUM_REPORTING_URL="https://168.1.53.231.nip.io:446/eum/" && \
   helm install robot-shop K8s/helm \
     --namespace robot-shop \
     --set image.version=2.1.0 \
+    --set nodeport=true \
     --set eum.url="${INSTANA_EUM_REPORTING_URL}" \
     --set eum.key="${INSTANA_EUM_KEY}"
 ```
