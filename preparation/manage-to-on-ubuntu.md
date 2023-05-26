@@ -39,7 +39,7 @@ docker run hello-world
 1. Install “kind” – it’s a tool for creating Kubernetes in Docker, that why it’s called “kind”:
 
 ```sh
-curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.16.0/kind-linux-amd64
+curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.19.0/kind-linux-amd64
 chmod +x ./kind
 sudo mv ./kind /usr/local/bin/kind
 ```
@@ -47,7 +47,7 @@ sudo mv ./kind /usr/local/bin/kind
 ```sh
 # Check the version
 # Should see something like: 
-# kind v0.16.0 go1.19.1 linux/amd64
+# kind v0.19.0 go1.19.1 linux/amd64
 kind --version
 ```
 
