@@ -146,13 +146,14 @@ EOF
 ```
 
 ```sh
-# Set up the proper EUM endpoint which will proxy to the :2999 internal port
-# DO REPLACE IT WITH YOUR ENDPOINT!!!
-# Ref: https://www.ibm.com/docs/en/obi/current?topic=installer-configuring-end-user-monitoring
-EUM_ENDPOINT="https://168.1.53.216.nip.io:446" && \
-cat | sudo tee -a settings.hcl <<EOF
-eum {
-  tracking_base_url = "${EUM_ENDPOINT}/eum/"
+cat <<EOF | sudo tee -a settings.hcl
+# Enable beta feature: "Infrastructure and Platforms" metrics in custom widgets
+feature "beeinstana" { 
+  enabled = true
+}
+# Enable beta feature: Apdex in the custom widgets
+feature "apdexWidgetEnabled" { 
+  enabled = true 
 }
 EOF
 
