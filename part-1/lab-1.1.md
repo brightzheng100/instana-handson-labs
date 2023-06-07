@@ -131,18 +131,6 @@ com.instana.plugin.generic.hardware:
   enabled: true
   availability-zone: "${INSTANA_ZONE}"
 EOF
-
-# (optional) Configure host, like tags
-# Do change them accordingly
-sudo touch /opt/instana/agent/etc/instana/configuration-host.yaml
-
-cat <<EOF | sudo tee /opt/instana/agent/etc/instana/configuration-host.yaml
-# Host
-com.instana.plugin.host:
-  tags:
-    - 'poc'
-    - 'instana'
-EOF
 ```
 
 ```sh

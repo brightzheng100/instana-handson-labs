@@ -93,3 +93,33 @@ function progress-bar {
   clean_line
   printf "\n";
 }
+
+#
+# export $1 with given default value of $2, if $1 doesn't exist or set
+# Usage:
+#   export_var_with_default <VAR NAME> <VAR'S DEFAULT VALUE> [<1 to FORCE TO SET WITH DEFAULT VALUE>]
+#   where
+#     $1 - the var name
+#     $2 - the var default value
+#     $3 - optional, "1" to force set with default value
+# Example:
+#   export_var_with_default "MY_VAR" "DEFAULT_VALUE"
+#
+function export_var_with_default() {
+  var_name=$1
+  var_default_value=$2
+  var_force_set=$3
+
+  #echo "params: $var_name, $var_default_value, $var_force_set"
+  var_current_value=""
+  eval var_current_value='$'"$var_name"
+
+  #echo "before: $var_name = $var_current_value"
+
+  # if $1 doesn't exist or set
+  if [[ "x${var_current_value}" == "x" || "${var_force_set}" == "1" ]]; then
+    var_current_value="$var_default_value"
+  fi
+  export $var_name="$var_current_value"
+  #echo "after: $var_name = ${var_current_value}"
+}

@@ -1,149 +1,146 @@
-# Lab 2.2 – Website Monitoring
+# Lab 2.2 – The “Classic” App Stack Monitoring
 
-## 2. Install Robot-Shop website
-
-### On Kubernetes
+## Step 1: Let’s start up our Spring Boot app
 
 ```sh
-# Create the namespace
-$ kubectl create namespace robot-shop
+# Clone the Spring Boot app
+git clone https://github.com/brightzheng100/springboot-swagger-jpa-stack.git
+cd springboot-swagger-jpa-stack
 
-# Clone the repo
-$ git clone https://github.com/instana/robot-shop
+# Start it up
+# Make sure you see something like:
+# ==> [INFO] TomcatWebServer(220) - Tomcat started on port(s): 8080 (http) with context path ''
+# ==> [INFO] Application(61) - Started Application in 3.977 seconds (JVM running for 4.631)
+mvn spring-boot:run
 
-# Then cd into it
-$ cd robot-shop
+# Ctrl + C to stop it
 
-# Deploy it by Helm 3
-# NOTE: Use the right values generated in website config as the variables
-$ INSTANA_EUM_REPORTING_URL="https://168.1.53.231.nip.io:446/eum/" && \
-  INSTANA_EUM_KEY="xxxxxxxxxxxxxxxxx" && \
-  helm install robot-shop K8s/helm \
-    --namespace robot-shop \
-    --set image.version=2.1.0 \
-    --set nodeport=true \
-    --set eum.url="${INSTANA_EUM_REPORTING_URL}" \
-    --set eum.key="${INSTANA_EUM_KEY}"
+# And start it again at the background
+nohup bash -c "mvn spring-boot:run" &> app.out & echo $! > app.pid
+
+# Perform some checks
+# Health Check
+curl http://localhost:8080/actuator/health | jq
 ```
 
+
+## Step 2: Run the load-gen.sh
+
 ```sh
-# Check out the pods deployed
-$ kubectl get pod -n robot-shop
+nohup bash -c "./load-gen.sh" &> load.out & echo $! > load.pid
 ```
 
+
+## Step 4: Deploy the VM-based agent
+
+Optional, after deploying the agent script, if you want to further control the agent resource:
+
 ```sh
-# Expose the app if you want – this is optional for the lab
-$ NODEPORT=$( kubectl get svc web -o=jsonpath='{.spec.ports[0].nodePort}' -n robot-shop ) && \
-  docker run -d --restart always \
-    --name kind-proxy-${NODEPORT} \
-    --publish 0.0.0.0:${NODEPORT}:${NODEPORT} \
-    --link kind-control-plane:target \
-    --network kind \
-    alpine/socat -dd \
-    tcp-listen:${NODEPORT},fork,reuseaddr tcp-connect:target:${NODEPORT} && \
-  echo "you now can access the app through: http://<HOST IP>:${NODEPORT}"
+sudo systemctl edit instana-agent
 ```
 
-### On OpenShift
+Add this as the content:
 
-```sh
-# Create the project
-$ oc adm new-project robot-shop
-$ oc project robot-shop
-
-# Grant permissions
-$ oc adm policy add-scc-to-user anyuid -z default -n robot-shop
-$ oc adm policy add-scc-to-user privileged -z default -n robot-shop
-
-# Clone the repo
-$ git clone https://github.com/instana/robot-shop
-
-# Then cd into it
-$ cd robot-shop
-
-# Deploy it by Helm 3
-# NOTE: Use the right values generated in website config as the variables
-$ INSTANA_EUM_REPORTING_URL="https://168.1.53.231.nip.io:446/eum/" && \
-  INSTANA_EUM_KEY="xxxxxxxxxxxxxxxxx" && \
-  helm install robot-shop K8s/helm \
-    --namespace robot-shop \
-    --set image.version=2.1.0 \
-    --set eum.url="${INSTANA_EUM_REPORTING_URL}" \
-    --set eum.key="${INSTANA_EUM_KEY}"
-    --set openshift=true
-    --set ocCreateRoute=true
+```conf
+[Service]
+CPUAccounting=true
+CPUQuota=50%            # 0.5 CPU
+MemoryAccounting=true
+MemoryMax=750M          # 750M memory, defaults to 512M
 ```
 
-```sh
-# Check out the pods deployed
-$ kubectl get pod -n robot-shop
+Restart:
 
-# Check out the route
-$ kubectl get route -n robot-shop
+```sh
+sudo systemctl daemon-reload
+sudo systemctl restart instana-agent
 ```
 
-## 3. Install the “load-gen” app
+
+## Step 6: Tune the agent’s configuration
 
 ```sh
-# Deploy the load-gen App
-$ kubectl -n robot-shop apply -f - <<EOF
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: load
-  labels:
-    service: load
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      service: load
-  template:
-    metadata:
-      labels:
-        service: load
-    spec:
-      containers:
-      - name: load
-        env:
-          - name: HOST
-            value: "http://web:8080/"
-          - name: NUM_CLIENTS
-            value: "5"
-          - name: SILENT
-            value: "1"
-          - name: ERROR
-            value: "0"                  # disable the error calls first
-        image: robotshop/rs-load:latest
+# You may take a look the default configuraiton files
+ls /opt/instana/agent/etc/instana/
+
+# Touch the file just to show you it's a new file actually
+touch /opt/instana/agent/etc/instana/configuration-zone.yaml
+
+# Make sure you're using your identifier to replace the "x" here
+# So it may look like: INSTANA_ZONE="Student-99-Zone" ...
+INSTANA_ZONE="Student-x-Zone" && \
+cat <<EOF | sudo tee /opt/instana/agent/etc/instana/configuration-zone.yaml
+# Hardware & Zone
+com.instana.plugin.generic.hardware:
+  enabled: true
+  availability-zone: "${INSTANA_ZONE}"
 EOF
 ```
 
+
+## Step 7: How if I deploy new technologies now?
+
+Run this if you're with `RHEL/Centos`:
+
 ```sh
-# Deploy the Selenium-based EUM friendly load-gen
-$ kubectl -n robot-shop apply -f - <<EOF
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: rs-website-load
-  labels:
-    service: rs-website-load
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      service: rs-website-load
-  template:
-    metadata:
-      labels:
-        service: rs-website-load
-    spec:
-      containers:
-      - name: rs-website-load
-        env:
-          - name: HOST
-            value: "http://web:8080/"
-        image: brightzheng100/rs-website-load:2.1.0
-        imagePullPolicy: Always
+# Install httpd
+sudo dnf install httpd -y
+
+# Enable server status
+cat <<EOF | sudo tee -a /etc/httpd/conf/httpd.conf
+ExtendedStatus on
+<Location /server-status>
+  SetHandler server-status
+  Order deny,allow
+  Allow from 127.0.0.1
+</Location>
 EOF
+
+# Start up
+sudo systemctl start httpd
 ```
 
+Or this if you're with `Ubuntu`:
+
+```sh
+# Install apache2
+sudo apt-get install -y apache2
+
+# Enable server status
+cat <<EOF | sudo tee -a /etc/apache2/apache2.conf
+ExtendedStatus on
+<Location /server-status>
+  SetHandler server-status
+  Order deny,allow
+  Allow from 127.0.0.1
+</Location>
+EOF
+
+# Start up
+sudo systemctl start apache2
+```
+
+
+## Clean Up
+
+Assuming we're in the Git repository's directory, say `~/springboot-swagger-jpa-stack`.
+
+```sh
+# 1. Kill the load-gen
+kill $(cat load.pid)
+
+# 2. Kill the app
+kill $(cat app.pid)
+
+# 3. Uninstall the Apache HTTPd
+# Run this in RHEL/CentOS
+sudo dnf remove httpd -y
+# Or, run this in Ubuntu
+sudo apt-get remove apache2 -y
+
+# 4. Uninstall Instana agent
+# Run this in RHEL/CentOS
+sudo dnf remove instana-agent-dynamic -y
+# Or, run this in Ubuntu
+sudo apt-get remove instana-agent-dynamic -y
+```

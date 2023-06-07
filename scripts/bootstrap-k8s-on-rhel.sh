@@ -122,12 +122,20 @@ function installing-local-path-provisioner {
 }
 
 
-## ----------------------
+## ----------------------------------------------------------------------------------------
+
 
 # Export the vars before running the scripts, for example:
-export K8S_VERSION="1.26.3"
-export CRIO_VERSION="1.26"
-export CALICO_MANIFEST_FILE="https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml"
+#
+# export K8S_VERSION="1.26.3"
+# export CRIO_VERSION="1.26"
+# export CALICO_MANIFEST_FILE="https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml"
+#
+# And the script will respect it, or the default value applies
+export_var_with_default "K8S_VERSION" "1.26.3"
+export_var_with_default "CRIO_VERSION" "1.26"
+export_var_with_default "CALICO_MANIFEST_FILE" "https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml"
+
 
 # Orchestrate the process
 echo "#################################################"
