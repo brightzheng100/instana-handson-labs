@@ -6,11 +6,9 @@
 # Clone the repo if you haven't
 cd ~
 git clone https://github.com/brightzheng100/instana-handson-labs.git
-cd instana-handson-labs
-git checkout labs-v3
+cd instana-handson-labs/scripts
 
 # Bootstrap the Kubernetes
-cd scripts
 # Run this if you're with RHEL/CentOS
 ./bootstrap-k8s-on-rhel.sh
 # Or run this if you're with Ubuntu
@@ -56,6 +54,8 @@ cd ~
 #git clone https://github.com/instana/robot-shop
 git clone https://github.com/brightzheng100/robot-shop
 cd robot-shop
+
+# This branch has all my changes, including the Selenium-based load-gen
 git checkout selenium-load-gen
 
 # Deploy it by Helm 3
@@ -74,43 +74,43 @@ INSTANA_EUM_KEY="xxxxxxxxxxxxxxxxx" && \
 
 ```sh
 # Check out the pods deployed
-$ kubectl get pod -n robot-shop
+kubectl get pod -n robot-shop
 ```
 
+Exposed the app for remote accessing:
+
 ```sh
-# Expose the app if you want – this is optional for the lab
-$ NODEPORT=$( kubectl get svc web -o=jsonpath='{.spec.ports[0].nodePort}' -n robot-shop ) && \
-  docker run -d --restart always \
-    --name kind-proxy-${NODEPORT} \
-    --publish 0.0.0.0:${NODEPORT}:${NODEPORT} \
-    --link kind-control-plane:target \
-    --network kind \
-    alpine/socat -dd \
-    tcp-listen:${NODEPORT},fork,reuseaddr tcp-connect:target:${NODEPORT} && \
-  echo "you now can access the app through: http://<HOST IP>:${NODEPORT}"
+# Retrieve your public IP
+ip addr
+
+# Expose the web service to any of the suitable open ports
+kubectl port-forward -n robot-shop deploy/web 8080:8080 --address 0.0.0.0
 ```
 
 ### On OpenShift
 
 ```sh
 # Create the project
-$ oc adm new-project robot-shop
-$ oc project robot-shop
+oc adm new-project robot-shop
+oc project robot-shop
 
 # Grant permissions
-$ oc adm policy add-scc-to-user anyuid -z default -n robot-shop
-$ oc adm policy add-scc-to-user privileged -z default -n robot-shop
+oc adm policy add-scc-to-user anyuid -z default -n robot-shop
+oc adm policy add-scc-to-user privileged -z default -n robot-shop
 
 # Clone the repo
-$ git clone https://github.com/instana/robot-shop
+cd ~
+#git clone https://github.com/instana/robot-shop
+git clone https://github.com/brightzheng100/robot-shop
+cd robot-shop
 
-# Then cd into it
-$ cd robot-shop
+# This branch has all my changes, including the Selenium-based load-gen
+git checkout selenium-load-gen
 
 # Deploy it by Helm 3
 # NOTE: Use the right values generated in website config as the variables
-$ INSTANA_EUM_REPORTING_URL="https://168.1.53.231.nip.io:446/eum/" && \
-  INSTANA_EUM_KEY="xxxxxxxxxxxxxxxxx" && \
+INSTANA_EUM_REPORTING_URL="https://xxx.xxx.xxx.xxx.nip.io:446/eum/" && \
+INSTANA_EUM_KEY="xxxxxxxxxxxxxxxxx" && \
   helm install robot-shop K8s/helm \
     --namespace robot-shop \
     --set image.version=2.1.0 \

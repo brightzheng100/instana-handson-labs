@@ -4,6 +4,7 @@
 
 ```sh
 # Clone the Spring Boot app
+cd ~
 git clone https://github.com/brightzheng100/springboot-swagger-jpa-stack.git
 cd springboot-swagger-jpa-stack
 
@@ -60,7 +61,7 @@ sudo systemctl restart instana-agent
 ## Step 6: Tune the agent’s configuration
 
 ```sh
-# You may take a look the default configuraiton files
+# You may take a look at the default configuraiton files
 ls /opt/instana/agent/etc/instana/
 
 # Touch the file just to show you it's a new file actually
@@ -138,9 +139,6 @@ sudo dnf remove httpd -y
 # Or, run this in Ubuntu
 sudo apt-get remove apache2 -y
 
-# 4. Uninstall Instana agent
-# Run this in RHEL/CentOS
-sudo dnf remove instana-agent-dynamic -y
-# Or, run this in Ubuntu
-sudo apt-get remove instana-agent-dynamic -y
+# 4. Stop Instana agent (as we need it later in Part 3 of the labs)
+sudo systemctl stop instana-agent
 ```

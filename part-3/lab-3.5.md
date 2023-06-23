@@ -1,20 +1,47 @@
 # Lab 3.5 – Custom Metrics (e.g. Cert Expiry Check)
 
-## 1. Enable built-in statsd collector
-
-Let's work in the "manage-to" Host VM.
-
-Firtly, log into the Ubuntu "VM" powered by `footloose`:
+## Step 0: Bring back VM-based agent
 
 ```sh
-$ footloose ssh root@ubuntu-0 -c footloose.yaml
+# Patch it with a non-existing node selector to temporily "disable" the agent daemonset
+kubectl -n instana-agent patch daemonset/instana-agent -p '{"spec": {"template": {"spec": {"nodeSelector": {"non-existing": "true"}}}}}'
 ```
 
-Now, let's work in this Ubuntu "VM":
+Then copy the generated Linux VM-based one-liner agent installation script, then paste to our VM and run it.
 
+```sh
+# Configure the zone
+INSTANA_ZONE="Student-{n}-Zone" && \
+cat <<EOF | sudo tee /opt/instana/agent/etc/instana/configuration-zone.yaml
+# Hardware & Zone
+com.instana.plugin.generic.hardware:
+  enabled: true
+  availability-zone: "${INSTANA_ZONE}"
+EOF
 ```
-# Enable agent's built-in statsd collector deamon
-root@ubuntu-0:~# cat > /opt/instana/agent/etc/instana/configuration-statsd.yaml <<EOF
+
+```sh
+# Check the status
+sudo systemctl status instana-agent
+
+# If not in running state, start it up
+sudo systemctl start instana-agent
+```
+
+## Step 1: Enable built-in statsd collector
+
+```sh
+# Install netstat if you don't have it on your VM
+# Do this in RHEL
+sudo dnf install net-tools -y
+# Or this in Ubuntu
+sudo apt install net-tools -y
+
+# Have a quick test
+netstat -an|grep 8125
+
+# Enable agent's built-in statsd sensor, which will act as statsd deamon
+cat > /opt/instana/agent/etc/instana/configuration-statsd.yaml <<EOF
 com.instana.plugin.statsd:
   enabled: true
   ports:
@@ -24,24 +51,29 @@ com.instana.plugin.statsd:
   flush-interval: 10 # in seconds
 EOF
 
-root@ubuntu-0:~# netstat -an|grep 8125
+# Have a check after
+netstat -an|grep 8125
 ```
 
-## 2. Let’s have a quick try
+## Step 2: Let’s have a quick try
 
-```
-root@ubuntu-0:~# apt-get install netcat -y
+```sh
+# Install nc or netcat
+# Run this in RHEL
+sudo dnf install nc -y
+# Or this in Ubuntu
+apt-get install netcat -y
 ```
 
-```
-root@ubuntu-0:~# echo "hits:1|c" | nc -u -w1 127.0.0.1 8125
-root@ubuntu-0:~# echo "custom.metrics.my_metric_name:10|g|#host:ubuntu-0" | nc -u -w1 127.0.0.1 8125
+```sh
+echo "hits:1|c" | nc -u -w1 127.0.0.1 8125
+echo "custom.metrics.my_metric_name:10|g|#host:ubuntu-0" | nc -u -w1 127.0.0.1 8125
 ```
 
-## 3. Create a simple script
+## Step 3: Create a simple script
 
-```
-root@ubuntu-0:~# cat > check-tls-cert-expiry.sh <<'EOF'
+```sh
+cat > check-tls-cert-expiry.sh <<'EOF'
 #!/bin/bash
 
 TARGET="google.com:443";
@@ -81,8 +113,8 @@ EOF
 
 ## 4. Run the script
 
-```
-root@ubuntu-0:~# chmod +x check-tls-cert-expiry.sh
+```sh
+chmod +x check-tls-cert-expiry.sh
 
-root@ubuntu-0:~# while true; do ./check-tls-cert-expiry.sh; sleep 5; done
+while true; do ./check-tls-cert-expiry.sh; sleep 5; done
 ```
