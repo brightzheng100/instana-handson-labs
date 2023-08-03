@@ -77,7 +77,7 @@ INSTANA_EUM_KEY="xxxxxxxxxxxxxxxxx" && \
 kubectl get pod -n robot-shop
 ```
 
-Exposed the app for remote accessing:
+Optionally, expose the app for remote access:
 
 ```sh
 # Retrieve your public IP
