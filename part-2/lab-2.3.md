@@ -41,7 +41,7 @@ If you're seeing similar results where the node is "Ready" and all Pods are "Run
 Otherwise, please fix the issue before proceeding.
 
 
-## Step 2: Install Robot-Shop website
+## Step 2: Install Robot-Shop
 
 ### On Kubernetes
 
@@ -113,7 +113,8 @@ INSTANA_EUM_REPORTING_URL="https://xxx.xxx.xxx.xxx.nip.io:446/eum/" && \
 INSTANA_EUM_KEY="xxxxxxxxxxxxxxxxx" && \
   helm install robot-shop K8s/helm \
     --namespace robot-shop \
-    --set image.version=2.1.0 \
+    --set image.repo=brightzheng100 \
+    --set image.version=2.1.1 \
     --set eum.url="${INSTANA_EUM_REPORTING_URL}" \
     --set eum.key="${INSTANA_EUM_KEY}"
     --set openshift=true
