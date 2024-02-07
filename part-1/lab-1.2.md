@@ -1,6 +1,6 @@
 # Lab 1.2 – Install Instana Server by Ansible Playbooks
 
-1. Clone the repo:
+## 1. Clone the repo:
 
 ```sh
 git clone https://github.com/brightzheng100/instana-server-ansible.git
@@ -8,7 +8,7 @@ git clone https://github.com/brightzheng100/instana-server-ansible.git
 cd instana-server-ansible
 ```
 
-2. Generate SSH key and copy the public key to the server:
+## 2. Generate SSH key and copy the public key to the server:
 
 ```sh
 # Let's generate the SSH key pair and save them to current folder as `id_rsa` and `id_rsa.pub`
@@ -26,7 +26,7 @@ $ ssh-keygen
 $ ssh-copy-id -i id_rsa.pub <USER>@<INSTANA_SERVER_IP>
 ```
 
-3. Create a `hosts` file
+## 3. Create a `hosts` file
  
 > NOTE: 
 > 1. There is a `hosts.sample` file for your reference
@@ -43,7 +43,7 @@ xxx.xxx.xxx.xxx
 EOF
 ```
 
-4. Create a `settings.json` with required variables.
+## 4. Create a `settings.json` with required variables.
 
 There are a few required variables:
 - `instana_server_fqdn`: the FQDN of Instana Server. Using IP is also fine
@@ -99,7 +99,7 @@ $ instana_server_fqdn="168.1.53.214.nip.io" && \
 EOF
 ```
 
-5. Run Ansible Playbooks
+## 5. Run Ansible Playbooks
 
 Follow [this document](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html) to install Ansible on MacOS/Windows/Linux, if you haven't done so.
 
