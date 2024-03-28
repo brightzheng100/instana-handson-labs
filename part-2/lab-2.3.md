@@ -9,10 +9,7 @@ git clone https://github.com/brightzheng100/instana-handson-labs.git
 cd instana-handson-labs/scripts
 
 # Bootstrap the Kubernetes
-# Run this if you're with RHEL/CentOS
-./bootstrap-k8s-on-rhel.sh
-# Or run this if you're with Ubuntu
-./bootstrap-k8s-on-ubuntu.sh
+./bootstrap-k8s.sh
 ```
 
 It will take roughly 3-5 minutes to fully bootstrap the VM as a single-node Kubernetes.

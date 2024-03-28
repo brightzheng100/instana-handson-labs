@@ -1,21 +1,18 @@
 #!/bin/bash
 
-source utils.sh
-
-
 ### Installing K8s tools
 function installing-k8s-tools {
   echo "----> installing-k8s-tools"
 
   # Add K8s repo
-  cat <<'EOF' | sudo tee /etc/yum.repos.d/kubernetes.repo
+  cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
-baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-$basearch
+baseurl=https://pkgs.k8s.io/core:/stable:/v${K8S_VERSION}/rpm/
 enabled=1
 gpgcheck=1
-gpgkey=https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
-exclude=kubelet kubeadm kubectl
+gpgkey=https://pkgs.k8s.io/core:/stable:/v${K8S_VERSION}/rpm/repodata/repomd.xml.key
+exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
 EOF
 
   # Set SELinux in permissive mode (effectively disabling it)
@@ -23,10 +20,10 @@ EOF
   sudo sed -i 's/^SELINUX=enforcing$/SELINUX=permissive/' /etc/selinux/config
 
   # Check the available candidates by:
-  #  dnf --showduplicates list kubelet
-  #  dnf --showduplicates list kubeadm
-  #  dnf --showduplicates list kubectl
-  sudo dnf install -y kubelet-$K8S_VERSION kubeadm-$K8S_VERSION kubectl-$K8S_VERSION --disableexcludes=kubernetes
+  #  dnf --showduplicates list kubelet --disableexcludes=kubernetes
+  #  dnf --showduplicates list kubeadm --disableexcludes=kubernetes
+  #  dnf --showduplicates list kubectl --disableexcludes=kubernetes
+  sudo yum install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
 
   # Enable kubelet
   sudo systemctl enable kubelet
@@ -121,32 +118,3 @@ function installing-local-path-provisioner {
   logme "$color_green" "DONE"
 }
 
-
-## ----------------------------------------------------------------------------------------
-
-
-# Export the vars before running the scripts, for example:
-#
-# export K8S_VERSION="1.26.3"
-# export CRIO_VERSION="1.26"
-# export CALICO_MANIFEST_FILE="https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml"
-#
-# And the script will respect it, or the default value applies
-export_var_with_default "K8S_VERSION" "1.26.3"
-export_var_with_default "CRIO_VERSION" "1.26"
-export_var_with_default "CALICO_MANIFEST_FILE" "https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml"
-
-
-# Orchestrate the process
-echo "#################################################"
-
-installing-k8s-tools
-installing-k8s-cri
-
-bootstrapping-k8s
-progress-bar 1
-
-getting-ready-k8s
-installing-k8s-cni
-
-installing-local-path-provisioner
