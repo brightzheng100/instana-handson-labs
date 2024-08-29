@@ -32,13 +32,13 @@ OpenJDK 64-Bit Server VM (build 25.372-b07, mixed mode)
 
 ```sh
 # Download Maven
-wget https://dlcdn.apache.org/maven/maven-3/3.9.2/binaries/apache-maven-3.9.2-bin.tar.gz
+wget https://dlcdn.apache.org/maven/maven-3/3.9.8/binaries/apache-maven-3.9.8-bin.tar.gz
 
 # Untar it
-tar -xvf apache-maven-3.9.2-bin.tar.gz
+tar -xvf apache-maven-3.9.8-bin.tar.gz
 
 # Add the path into ~/.bashrc
-echo 'PATH=$HOME/apache-maven-3.9.2/bin:$PATH' >> ~/.bashrc
+echo 'PATH=$HOME/apache-maven-3.9.8/bin:$PATH' >> ~/.bashrc
 source ~/.bashrc
 ```
 
@@ -46,11 +46,19 @@ You may verify that by:
 
 ```sh
 $ mvn -version
-Apache Maven 3.9.2 (c9616018c7a021c1c39be70fb2843d6f5f9b8a1c)
-Maven home: /home/itzuser/apache-maven-3.9.2
+Apache Maven 3.9.8 (c9616018c7a021c1c39be70fb2843d6f5f9b8a1c)
+Maven home: /home/itzuser/apache-maven-3.9.8
 Java version: 1.8.0_372, vendor: Red Hat, Inc., runtime: /usr/lib/jvm/java-1.8.0-openjdk-1.8.0.372.b07-4.el8.x86_64/jre
 Default locale: en_US, platform encoding: ANSI_X3.4-1968
 OS name: "linux", version: "4.18.0-425.19.2.el8_7.x86_64", arch: "amd64", family: "unix"
+```
+
+## Install Node.js
+
+```sh
+$ sudo dnf install nodejs -y
+$ node --version
+$ npm --version
 ```
 
 ## Install other necessary tools

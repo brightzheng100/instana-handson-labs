@@ -33,13 +33,13 @@ OpenJDK 64-Bit Server VM (build 25.362-b09, mixed mode)
 
 ```sh
 # Download Maven
-wget https://dlcdn.apache.org/maven/maven-3/3.9.2/binaries/apache-maven-3.9.2-bin.tar.gz
+wget https://dlcdn.apache.org/maven/maven-3/3.9.8/binaries/apache-maven-3.9.8-bin.tar.gz
 
 # Untar it
-tar -xvf apache-maven-3.9.2-bin.tar.gz
+tar -xvf apache-maven-3.9.8-bin.tar.gz
 
 # Add the path into ~/.bashrc
-echo 'PATH=$HOME/apache-maven-3.9.2/bin:$PATH' >> ~/.bashrc
+echo 'PATH=$HOME/apache-maven-3.9.8/bin:$PATH' >> ~/.bashrc
 source ~/.bashrc
 ```
 
@@ -47,11 +47,20 @@ You may verify that by:
 
 ```sh
 $ mvn -version
-Maven home: /home/itzuser/apache-maven-3.9.2
+Maven home: /home/itzuser/apache-maven-3.9.8
 Java version: 1.8.0_362, vendor: Private Build, runtime: /usr/lib/jvm/java-8-openjdk-amd64/jre
 Default locale: en, platform encoding: UTF-8
 OS name: "linux", version: "5.4.0-139-generic", arch: "amd64", family: "unix"
 ```
+
+## Install Node.js
+
+```sh
+$ sudo apt-get install nodejs -y
+$ node --version
+$ npm --version
+```
+
 
 ## Install other necessary tools
 
