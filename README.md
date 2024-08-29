@@ -7,28 +7,29 @@ This repo contains the copy-paste friendly scripts/commands for my Instana hands
 Currently, the labs incllude 3 parts:
 
 ```
-PART 1. INSTANA SERVER INSTALLATION
-LAB 1.1 – INSTALL INSTANA SERVER MANUALLY
-LAB 1.2 – INSTALL INSTANA SERVER BY ANSIBLE PLAYBOOKS
-LAB 1.3 – INSTALL INSTANA BACKEND BY “STANCTL”
+Part 1. Instana Backend Installation
+Lab 1.1 – Install Instana Classic Edition Manually
+Lab 1.2 – Install Instana Classic Edition by Ansible Playbooks
+Lab 1.3 – Install Instana Standard Edition by “stanctl”
 
-PART 2. CORE CAPABILITIES & USE CASES
-LAB 2.1 – A QUICK INSTANA TOUR
-LAB 2.2 – THE “CLASSIC” APP STACK MONITORING
-LAB 2.3 – WEBSITE MONITORING
-LAB 2.4 – INSTALL & MANAGE AGENTS
-LAB 2.5 – APPLICATION MONITORING
-LAB 2.6 – INFRASTRUCTURE MONITORING
+Part 2. Core Capabilities & Use Cases
+Lab 2.1 – A Quick Instana Tour
+Lab 2.2 – The “Classic” App Stack Monitoring
+Lab 2.3 – Website Monitoring
+Lab 2.4 – Install & Manage Agents
+Lab 2.5 – Application Monitoring
+Lab 2.6 – Infrastructure Monitoring
 
-
-PART 3. ADVANCED TOPICS
-LAB 3.1 – EVENTS, ANALYTICS AND TROUBLESHOOTING
-LAB 3.2 – ALERTS & CHANNELS
-LAB 3.3 – SLO MONITORING WITH CUSTOM DASHBOARD
-LAB 3.4 – RBAC & USER ONBOARDING
-LAB 3.5 – CUSTOM METRICS (E.G. CERT EXPIRY CHECK)
-LAB 3.6 – CONFIGURATION-BASED INSTRUMENTATION
-LAB 3.7 – OPENTELEMETRY SUPPORT IN INSTANA
+Part 3. Advanced Topics
+Lab 3.1 – Events, Analytics and Troubleshooting
+Lab 3.2 – Alerts & Channels
+Lab 3.3 – SLO Monitoring with Custom Dashboard
+Lab 3.4 – RBAC & User Onboarding
+Lab 3.5 – Custom Metrics (e.g. Cert Expiry Check)
+Lab 3.6 – Configuration-based Instrumentation
+Lab 3.7 – OpenTelemetry Support in Instana
+Lab 3.8 – Language-specific apps monitoring practices - Python
+Lab 3.9 – Language-specific apps monitoring practices - Node.js
 ```
 
 ## How to obtain the scripts/commands?
