@@ -17,7 +17,12 @@ mvn spring-boot:run
 # Ctrl + C to stop it
 
 # And start it again at the background
-nohup bash -c "mvn spring-boot:run" &> app.out & echo $! > app.pid
+nohup bash -c "mvn spring-boot:start" &> app.out & echo $! > app.pid
+
+# Tail the logs 
+tail -f app.out
+
+# Ctrl + C to quit tailing
 
 # Perform some checks
 # Health Check
@@ -130,8 +135,8 @@ Assuming we're in the Git repository's directory, say `~/springboot-swagger-jpa-
 # 1. Kill the load-gen
 kill $(cat load.pid)
 
-# 2. Kill the app
-kill $(cat app.pid)
+# 2. Stop the app
+mvn spring-boot:stop
 
 # 3. Uninstall the Apache HTTPd
 # Run this in RHEL/CentOS

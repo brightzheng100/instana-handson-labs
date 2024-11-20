@@ -6,10 +6,11 @@
 cat <<EOF | sudo tee /opt/instana/agent/etc/instana/configuration-otel.yaml
 com.instana.plugin.opentelemetry:
   grpc:
-    enabled: true   # grpc endpoint
+    enabled: true   # grpc endpoint, listening on port 4317
   http:
-    enabled: true   # http endpoint
+    enabled: true   # http endpoint, listening on port 4318
 EOF
+
 ```
 
 ```sh
@@ -31,9 +32,9 @@ wget https://github.com/open-telemetry/opentelemetry-java-instrumentation/releas
 ```
 
 ```sh
-export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4317
+export OTEL_EXPORTER_OTLP_ENDPOINT=http://localhost:4318
 
-nohup bash -c "mvn spring-boot:run -Dspring-boot.run.jvmArguments=\"-javaagent:`pwd`/opentelemetry-javaagent.jar\"" &> app.out & echo $! > app.pid
+nohup bash -c "mvn spring-boot:start -Dspring-boot.run.jvmArguments=\"-javaagent:`pwd`/opentelemetry-javaagent.jar\"" &> app.out & echo $! > app.pid
 ```
 
 ```sh
@@ -45,4 +46,14 @@ curl http://localhost:8080/actuator/health | jq
 
 ```sh
 nohup bash -c "./load-gen.sh" &> load.out & echo $! > load.pid
+```
+
+## Clean Up
+
+```sh
+# Kill the load-gen
+kill -9 $(cat load.pid)
+
+# Stop the app
+mvn spring-boot:stop
 ```

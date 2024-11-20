@@ -12,9 +12,6 @@ cd instana-handson-labs/scripts
 ./bootstrap-k8s.sh
 ```
 
-It will take roughly 3-5 minutes to fully bootstrap the VM as a single-node Kubernetes.
-You may verify the readiness by:
-
 ```sh
 $ kubectl get node
 NAME                                        STATUS   ROLES           AGE     VERSION
@@ -34,18 +31,11 @@ kube-system          kube-scheduler-itz-550004ghs4-hq4f.dte.demo.ibmcloud.com   
 local-path-storage   local-path-provisioner-7f8667b75c-vnmw2                             1/1     Running   0          2m32s
 ```
 
-If you're seeing similar results where the node is "Ready" and all Pods are "Running", you're good to go.
-Otherwise, please fix the issue before proceeding.
-
-
-## Step 2: Install Robot-Shop
+## Step 2: Install Robot-Shop website
 
 ### On Kubernetes
 
 ```sh
-# Create the namespace
-kubectl create namespace robot-shop
-
 # Clone the repo
 cd ~
 #git clone https://github.com/instana/robot-shop
@@ -55,18 +45,22 @@ cd robot-shop
 # This branch has all my changes, including the Selenium-based load-gen
 git checkout selenium-load-gen
 
+# Create the namespace
+kubectl create namespace robot-shop
+
 # Deploy it by Helm 3
 # NOTE: Use the right values generated in website config as the variables
-INSTANA_EUM_REPORTING_URL="https://xxx.xxx.xxx.xxx.nip.io:446/eum/" && \
+INSTANA_EUM_REPORTING_URL="https://162.133.113.4.nip.io/eum/" && \
 INSTANA_EUM_KEY="xxxxxxxxxxxxxxxxx" && \
-  helm install robot-shop K8s/helm \
-    --namespace robot-shop \
-    --set image.repo=brightzheng100 \
-    --set image.version=2.1.1 \
-    --set redis.storageClassName="local-path" \
-    --set nodeport=true \
-    --set eum.url="${INSTANA_EUM_REPORTING_URL}" \
-    --set eum.key="${INSTANA_EUM_KEY}"
+REDIS_STORAGE_CLASS="local-path" && \
+helm install robot-shop K8s/helm \
+  --namespace robot-shop \
+  --set image.repo=brightzheng100 \
+  --set image.version=2.1.1 \
+  --set eum.url="${INSTANA_EUM_REPORTING_URL}" \
+  --set eum.key="${INSTANA_EUM_KEY}" \
+  --set redis.storageClassName="${REDIS_STORAGE_CLASS}" \
+  --set nodeport=true
 ```
 
 ```sh
@@ -87,14 +81,6 @@ kubectl port-forward -n robot-shop deploy/web 8080:8080 --address 0.0.0.0
 ### On OpenShift
 
 ```sh
-# Create the project
-oc adm new-project robot-shop
-oc project robot-shop
-
-# Grant permissions
-oc adm policy add-scc-to-user anyuid -z default -n robot-shop
-oc adm policy add-scc-to-user privileged -z default -n robot-shop
-
 # Clone the repo
 cd ~
 #git clone https://github.com/instana/robot-shop
@@ -103,19 +89,31 @@ cd robot-shop
 
 # This branch has all my changes, including the Selenium-based load-gen
 git checkout selenium-load-gen
+```
+
+```sh
+# Create the project
+oc adm new-project robot-shop
+oc project robot-shop
+
+# Grant permissions
+oc adm policy add-scc-to-user anyuid -z default -n robot-shop
+oc adm policy add-scc-to-user privileged -z default -n robot-shop
 
 # Deploy it by Helm 3
 # NOTE: Use the right values generated in website config as the variables
-INSTANA_EUM_REPORTING_URL="https://xxx.xxx.xxx.xxx.nip.io:446/eum/" && \
-INSTANA_EUM_KEY="xxxxxxxxxxxxxxxxx" && \
-  helm install robot-shop K8s/helm \
-    --namespace robot-shop \
-    --set image.repo=brightzheng100 \
-    --set image.version=2.1.1 \
-    --set eum.url="${INSTANA_EUM_REPORTING_URL}" \
-    --set eum.key="${INSTANA_EUM_KEY}"
-    --set openshift=true
-    --set ocCreateRoute=true
+INSTANA_EUM_REPORTING_URL="https://xxx.xxx.xxx.xxx.nip.io/eum/" && \
+INSTANA_EUM_KEY="xxxxxxxxxxxxxxxxxxxxx" && \
+REDIS_STORAGE_CLASS="xxx" && \
+helm install robot-shop K8s/helm \
+  --namespace robot-shop \
+  --set image.repo=brightzheng100 \
+  --set image.version=2.1.1 \
+  --set eum.url="${INSTANA_EUM_REPORTING_URL}" \
+  --set eum.key="${INSTANA_EUM_KEY}" \
+  --set redis.storageClassName="${REDIS_STORAGE_CLASS}" \
+  --set openshift=true \
+  --set ocCreateRoute=true
 ```
 
 ```sh
@@ -164,8 +162,6 @@ spec:
 EOF
 ```
 
-### Selenium-based load-gen
-
 ```sh
 # Deploy the Selenium-based EUM friendly load-gen
 kubectl -n robot-shop apply -f - <<EOF
@@ -194,4 +190,3 @@ spec:
         imagePullPolicy: Always
 EOF
 ```
-

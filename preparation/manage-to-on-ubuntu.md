@@ -10,9 +10,6 @@ sudo apt-get install openjdk-8-jdk -y
 > Note: if you want to install other OpenJDK version, pick your own desired version instead:
 
 ```sh
-# To install OpenJDK v1.8, do this:
-sudo apt-get install openjdk-8-jdk -y
-
 # To install OpenJDK v11, do this:
 sudo apt-get install openjdk-11-jdk -y
 

@@ -9,9 +9,6 @@ sudo dnf install java-1.8.0-openjdk-devel -y
 > Note: if you want to install other OpenJDK version, pick your own desired version instead:
 
 ```sh
-# To install OpenJDK v1.8, do this:
-sudo dnf install java-1.8.0-openjdk-devel -y
-
 # To install OpenJDK v11, do this:
 sudo dnf install java-11-openjdk-devel -y
 
@@ -56,9 +53,10 @@ OS name: "linux", version: "4.18.0-425.19.2.el8_7.x86_64", arch: "amd64", family
 ## Install Node.js
 
 ```sh
-$ sudo dnf install nodejs -y
-$ node --version
-$ npm --version
+sudo dnf install nodejs -y
+
+node --version
+npm --version
 ```
 
 ## Install other necessary tools

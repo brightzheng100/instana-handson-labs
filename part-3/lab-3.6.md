@@ -8,7 +8,7 @@
 cd ~/springboot-swagger-jpa-stack
 
 # Start up the app
-nohup bash -c "mvn spring-boot:run" &> app.out & echo $! > app.pid
+nohup bash -c "mvn spring-boot:start" &> app.out & echo $! > app.pid
 
 # Start up the load-gen
 nohup bash -c "./load-gen.sh" &> load.out & echo $! > load.pid

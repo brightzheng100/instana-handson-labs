@@ -2,22 +2,21 @@
 
 ## Step 0: Bring back VM-based agent
 
-```sh
-# Patch it with a non-existing node selector to temporily "disable" the agent daemonset
-kubectl -n instana-agent patch daemonset/instana-agent -p '{"spec": {"template": {"spec": {"nodeSelector": {"non-existing": "true"}}}}}'
-```
-
-Then copy the generated Linux VM-based one-liner agent installation script, then paste to our VM and run it.
+Clean up Kubeadm-bootstrapped Kubernetes cluster:
 
 ```sh
-# Configure the zone
-INSTANA_ZONE="Student-{n}-Zone" && \
-cat <<EOF | sudo tee /opt/instana/agent/etc/instana/configuration-zone.yaml
-# Hardware & Zone
-com.instana.plugin.generic.hardware:
-  enabled: true
-  availability-zone: "${INSTANA_ZONE}"
-EOF
+node="`k get no -o json | jq -r ".items[0].metadata.name"`"
+kubectl drain ${node} --delete-emptydir-data --force --ignore-daemonsets
+kubeadm reset --force
+
+sudo systemctl disable kubelet
+sudo systemctl stop kubelet
+sudo systemctl disable crio
+sudo systemctl stop crio
+
+sudo rm -rf /etc/kubernetes /var/lib/kubelet /var/lib/etcd
+sudo iptables --flush
+rm -rf ~/.kube
 ```
 
 ```sh
@@ -41,13 +40,13 @@ sudo apt install net-tools -y
 netstat -an|grep 8125
 
 # Enable agent's built-in statsd sensor, which will act as statsd deamon
-cat > /opt/instana/agent/etc/instana/configuration-statsd.yaml <<EOF
+cat <<EOF | sudo tee /opt/instana/agent/etc/instana/configuration-statsd.yaml
 com.instana.plugin.statsd:
   enabled: true
   ports:
     udp: 8125
     mgmt: 8126
-  bind-ip: "0.0.0.0" # all IPs by default
+  bind-ip: "0.0.0.0"
   flush-interval: 10 # in seconds
 EOF
 
@@ -115,6 +114,8 @@ EOF
 
 ```sh
 chmod +x check-tls-cert-expiry.sh
+```
 
+```sh
 while true; do ./check-tls-cert-expiry.sh; sleep 5; done
 ```

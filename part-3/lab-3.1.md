@@ -1,6 +1,6 @@
 # Lab 3.1 – Events, analytics and troubleshooting
 
-## 4. Let’s purposely “inject” some issues
+## 4. Let’s “inject” some issues on purpose
 
 ```sh
 # Deploy the load-gen App
@@ -34,4 +34,10 @@ spec:
             value: "1"                     # enable it now
         image: robotshop/rs-load:latest
 EOF
+```
+
+## 5. What Instana has detected?
+
+```
+payment entity.zone:Student-0-Zone
 ```
