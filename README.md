@@ -8,11 +8,14 @@ Currently, the labs incllude 3 parts:
 
 ```
 Part 1. Instana Backend Installation
-Lab 1.1 – Install Instana Classic Edition Manually
-Lab 1.2 – Install Instana Classic Edition by Ansible Playbooks
-Lab 1.3 – Install Instana Standard Edition by “stanctl”
+
+Lab 1.1 – Install Instana Standard Edition by “stanctl”
+Lab 1.2 – Install Instana Classic Edition Manually
+Lab 1.3 – Install Instana Classic Edition by Ansible Playbooks
+
 
 Part 2. Core Capabilities & Use Cases
+
 Lab 2.1 – A Quick Instana Tour
 Lab 2.2 – The “Classic” App Stack Monitoring
 Lab 2.3 – Website Monitoring
@@ -20,9 +23,11 @@ Lab 2.4 – Install & Manage Agents
 Lab 2.5 – Application Monitoring
 Lab 2.6 – Infrastructure Monitoring
 
+
 Part 3. Advanced Topics
-Lab 3.1 – Events, Analytics and Troubleshooting
-Lab 3.2 – Alerts & Channels
+
+Lab 3.1 – Events, Alerts & Channels
+Lab 3.2 – Root Cause Analysis User Experience
 Lab 3.3 – SLO Monitoring with Custom Dashboard
 Lab 3.4 – RBAC & User Onboarding
 Lab 3.5 – Custom Metrics (e.g. Cert Expiry Check)
