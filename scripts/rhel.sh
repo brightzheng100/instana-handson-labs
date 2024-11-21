@@ -115,6 +115,8 @@ function installing-local-path-provisioner {
 
   kubectl apply -f manifests/local-path-config.yaml
 
+  kubectl patch storageclass local-path -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+
   logme "$color_green" "DONE"
 }
 
