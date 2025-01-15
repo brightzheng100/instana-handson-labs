@@ -32,13 +32,13 @@ esac
 
 # Export the vars before running the scripts, for example:
 #
-# export K8S_VERSION="1.26.3"
-# export CRIO_VERSION="1.26"
+# export K8S_VERSION="1.30"
+# export CRIO_VERSION="1.30"
 # export CALICO_MANIFEST_FILE="https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml"
 #
 # And the script will respect it, or the default value applies
-export_var_with_default "K8S_VERSION" "1.28"
-export_var_with_default "CRIO_VERSION" "1.28"
+export_var_with_default "K8S_VERSION" "1.30"
+export_var_with_default "CRIO_VERSION" "1.30"
 export_var_with_default "CALICO_MANIFEST_FILE" "https://raw.githubusercontent.com/projectcalico/calico/v3.25.0/manifests/calico.yaml"
 
 
