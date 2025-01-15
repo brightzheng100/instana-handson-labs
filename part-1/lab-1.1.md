@@ -37,12 +37,17 @@ update-grub
 sudo grubby --args="transparent_hugepage=never" --update-kernel ALL
 ```
 
+Restart:
+```sh
+$ sudo reboot now
+```
+
+And check to make sure that **never** is selected by **[]**, as **[never]**, like this:
+
 ```sh
 $ cat /sys/kernel/mm/transparent_hugepage/enabled
 always madvise [never]
 ```
-
-Restart.
 
 If no effect in RHEL, try this:
 
@@ -76,6 +81,17 @@ $ sudo tuned-adm profile profile-nothp
 # Double check the THP setting
 $ cat /sys/kernel/mm/transparent_hugepage/enabled
 always madvise [never]
+```
+
+Make sure the “/usr/local/bin” is in `$PATH`:
+
+```sh
+# Check
+$ echo $PATH | grep /usr/local/bin
+
+# Add it in and source it if not
+echo 'export PATH=$PATH:/usr/local/bin' >> ~/.bashrc
+source ~/.bashrc
 ```
 
 
