@@ -78,7 +78,7 @@ EOF
   # To change existing cluster, `vi /etc/kubernetes/manifests/kube-apiserver.yaml`,
   # add `--service-node-port-range=80-32767`, save then `sudo systemctl restart kubelet`
   #sudo kubeadm init --pod-network-cidr=192.168.0.0/16
-  sudo kubeadm init --config manifests/kubeadm-init-conf.yaml
+  sudo kubeadm init --config manifests/kubeadm-init-conf.yaml --ignore-preflight-errors=all
   
   logme "$color_green" "DONE"
 }
