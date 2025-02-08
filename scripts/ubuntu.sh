@@ -84,3 +84,5 @@ function installing-k8s-cri {
 ### Installing K8s CNI with Calico
 
 ### Installing local-path-provisioner
+
+### Preparing join node into the cluster

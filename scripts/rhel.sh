@@ -120,3 +120,32 @@ function installing-local-path-provisioner {
   logme "$color_green" "DONE"
 }
 
+### Preparing join node into the cluster
+function preparing-join-node-into-cluster {
+  echo "----> preparing-join-node-into-cluster"
+
+  # 1. Disable the swap. To make it permanent, update the /etc/fstab and comment/remove the line with swap
+  #   sudo vi /etc/fstab
+  #   UUID=0aa6ce7f-b825-4b08-9515-b1e7a2bdb9a9 / ext4 defaults,noatime 0 1
+  #   UUID=f909ac6c-f5e5-4f9a-874a-8aabecc4f674 /boot ext4 defaults,noatime 0 0
+  #   #LABEL=SWAP-xvdb1	swap	swap	defaults,nofail	0	0
+  sudo swapoff -a
+
+  # 2. Create the .conf file to load the modules at bootup
+  cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+overlay
+br_netfilter
+EOF
+  sudo modprobe overlay
+  sudo modprobe br_netfilter
+
+  # 3. Set up required sysctl params, these persist across reboots.
+  cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+net.bridge.bridge-nf-call-iptables  = 1
+net.ipv4.ip_forward                 = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+EOF
+  sudo sysctl --system
+
+}
+
