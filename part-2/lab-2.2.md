@@ -133,7 +133,7 @@ Assuming we're in the Git repository's directory, say `~/springboot-swagger-jpa-
 
 ```sh
 # 1. Kill the load-gen
-kill $(cat load.pid)
+kill -9 $(cat load.pid)
 
 # 2. Stop the app
 mvn spring-boot:stop
