@@ -53,7 +53,7 @@ OS name: "linux", version: "5.4.0-139-generic", arch: "amd64", family: "unix"
 ## Install Node.js
 
 ```sh
-$ sudo apt-get install nodejs -y
+$ sudo apt-get install nodejs npm -y
 $ node --version
 $ npm --version
 ```
