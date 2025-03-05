@@ -7,7 +7,7 @@ Clean up Kubeadm-bootstrapped Kubernetes cluster:
 ```sh
 node="`k get no -o json | jq -r ".items[0].metadata.name"`"
 kubectl drain ${node} --delete-emptydir-data --force --ignore-daemonsets
-kubeadm reset --force
+sudo kubeadm reset --force
 
 sudo systemctl disable kubelet
 sudo systemctl stop kubelet
@@ -61,7 +61,7 @@ netstat -an|grep 8125
 # Run this in RHEL
 sudo dnf install nc -y
 # Or this in Ubuntu
-apt-get install netcat -y
+sudo apt-get install netcat -y
 ```
 
 ```sh
