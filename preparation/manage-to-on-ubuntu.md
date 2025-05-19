@@ -1,5 +1,13 @@
 # Preparing the “manage-to” Host, on Ubuntu
 
+## Patch the /etc/hosts
+
+Just to avoid the potentially annoying warning like “sudo: unable to resolve host xxx: Name or service not known” in TechZone's Ubuntu:
+
+```sh
+sudo sed -i "1s/$/ `hostname`/" /etc/hosts
+```
+
 ## Install JDK
 
 ```sh
