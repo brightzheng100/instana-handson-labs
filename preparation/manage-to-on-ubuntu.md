@@ -70,12 +70,9 @@ $ npm --version
 ## Install other necessary tools
 
 ```sh
-# Git should have been installed by default
-# If not, run this
-sudo apt-get install git -y
-
-# jq
-sudo apt-get install jq -y
+# Some may have been installed but no harm to make sure
+# git, jq, gnupg
+sudo apt-get install git jq gnupg -y
 
 # Helm
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
